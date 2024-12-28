@@ -5,7 +5,7 @@ Live example webapp at https://app.lovethecode.net/
 
 
 
-Introduction to Voice Interactions
+A. Introduction to Voice Interactions
 
 
 
@@ -21,7 +21,7 @@ it's own web presence or be stylized and incorporated into another existing webs
 
 
 
-Background
+B. Background
 
 
 
@@ -93,7 +93,7 @@ engage and delight their audiences.
 
 
 
-Requirements
+C. Requirements
 
 
 
