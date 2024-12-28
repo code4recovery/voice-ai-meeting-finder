@@ -83,7 +83,7 @@ engage and delight their audiences.
 
 Requirements
 
-1.Meeting Information
+1.Meeting Information (TSML JSON Data Feed)
 
 2.WebServer for Hosting running NodeJS
 
