@@ -1,6 +1,8 @@
 # voice-ai-meeting-finder
 Node.js project for voice-based GPT-4 chat with retrieval-based Q&amp;A based on meetings json data/feed.
 
+Live example webapp at app.lovethecode.net
+
 Introduction to Voice Interactions
 As part of my own experience, strength and hope, I have encountered how AA 12 Step
 Meetings can be stored and relayed as data to many viewers seeking meeting information. I
