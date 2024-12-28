@@ -88,3 +88,5 @@ Requirements
 2.WebServer for Hosting running NodeJS
 
 3.Domain Name/Subdomain
+
+4.AI API Key (for ChatGPT, in this example)
