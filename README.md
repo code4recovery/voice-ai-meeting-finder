@@ -3,7 +3,9 @@ Node.js project for voice-based GPT-4 chat with retrieval-based Q&amp;A based on
 
 Live example webapp at https://app.lovethecode.net/
 
+
 Introduction to Voice Interactions
+
 
 As part of my own experience, strength and hope, I have encountered how AA 12 Step
 Meetings can be stored and relayed as data to many viewers seeking meeting information. I
@@ -15,7 +17,9 @@ access the information using only their voice! A more human interaction is one o
 ways this application can benefit our recovery community. This web application can stand on
 it's own web presence or be stylized and incorporated into another existing website.
 
+
 Background
+
 
 A ChatGPT widget with voice input and output can transform a website experience by making
 it more dynamic, accessible, and intuitive. Here are some key benefits and use cases:
@@ -76,12 +80,15 @@ points that drive conversion and loyalty.
 instructions and answers can guide users step-by-step, improving
 engagement and understanding.
 
+
 In essence, a ChatGPT widget with voice input and output empowers websites to deliver a
 more accessible, efficient, and humanized digital experience. By offering natural, spoken
 interaction, it not only enhances usability for all but also opens up new ways for businesses to
 engage and delight their audiences.
 
+
 Requirements
+
 
 1.Meeting Information (TSML JSON Data Feed)
 
