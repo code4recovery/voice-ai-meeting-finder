@@ -19,7 +19,7 @@ const io = new Server(server);
 
 
 /******************************************************************************
- * 2. HELMET CONTENT SECURITY POLICY
+ * 2. HELMET CONTENT SECURITY POLICY => please remove for proper functioning on different environments. *! !!
  ******************************************************************************/
 app3.use(
   helmet({
