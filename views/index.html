@@ -2,159 +2,187 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />      
-    <title>Meeting Finder chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <style>
-    body {
-      font-family: sans-serif;
-      margin: 1rem;
-    }
-    #transcript {
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      background: #f9f9f9;
-    }
-    #chatResponses {
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      background: #fafafa;
-    }
-    .ai-message {
-      background: #f0f8ff; /* light-blue highlight for AI replies */
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .user-message {
-      background: #eef;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .btn-outline-dark {
-    color: #343a40;
-    background-color: transparent;
-    background-image: none;
-    background-color: #ffc107;
-    border-color: #343a40;
-    padding: 3px 5px;
-    }
-    #thinking { min-height: 140px; width: 100%; text-align: center; }
-  </style>
-</head>
-<body>
-  <h1 class="text-center">Voice Chat with GPT</h1>
-  <div class="container-fluid">
-  <div class="row">
-  <div class="col-6 py-3 text-center">
-  <p>Example question: "Meetings at Place_Name."</p>
-  </div>
-  <div class="col-6 py-3">
-  <p><a href="doc.pdf">Background</a></p>
-  <p><a href="#">Documentation</a></p>
-  </div>
-  </div>
-  <div class="col-12 text-center">
-  <button id="startBtn" type="button" class="btn btn-outline-dark">Start Voice Input</button>      
-  </div>
-  </div>
-  
-  <div id="transcript">Your voice input will appear here...</div>
-  <div id="chatResponses"><div class="ai-message"></div></div>
-  <div id="thinking"><br /></div>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <title>Meeting Finder Voice Chat with AI</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 1rem;
+      }
+      #transcript {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+      }
+      #chatResponses {
+        margin-top: 1rem;
+        padding: 1rem;
+        border: 1px solid #ccc;
+        background: #fafafa;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .ai-message {
+        background: #f0f8ff; /* light-blue highlight for AI replies */
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .user-message {
+        background: #eef;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      .btn-outline-dark {
+        color: #343a40;
+        background-color: #ffc107;
+        border-color: #343a40;
+        padding: 3px 5px;
+      }
+      #thinking {
+        min-height: 62px;
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="text-center">Meeting Finder Chat</h1>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6 py-3 text-center">
+          <p>Example question: "Meetings at Place_Name."</p>
+          <p>Example question: "Meetings in Long Beach."</p>
+        </div>
+        <div class="col-6 py-3">
+          <p><a href="doc.pdf">Background</a></p>
+          <p>
+            <a
+              href="https://github.com/code4recovery/voice-ai-meeting-finder/"
+              target="_blank"
+              >Documentation</a
+            >
+          </p>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-6 text-center">
+        <button id="startBtn" type="button" class="btn btn-outline-dark">
+          Start Voice Input
+        </button>
+      </div>
+      <div class="col-6 text-center">
+        <button id="stopBtn" type="button" class="btn btn-outline-danger">
+          Stop Voice
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center">
+        <div id="thinking"><br /></div>
+      </div>
+    </div>
 
-  <!-- Socket.io client script -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    // 1) Connect to the server
-    const socket = io();
+    <div id="transcript">Your voice input will appear here...</div>
+    <div id="chatResponses"></div>
 
-    // 2) DOM references
-    const startBtn = document.getElementById("startBtn");
-    const transcriptDiv = document.getElementById("transcript");
-    const chatResponses = document.getElementById("chatResponses");
+    <!-- Socket.io client script -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // 1) Connect to the server
+      const socket = io();
 
-    // 3) Set up Web Speech API
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+      // 2) DOM references
+      const startBtn = document.getElementById("startBtn");
+      const stopBtn = document.getElementById("stopBtn");
+      const transcriptDiv = document.getElementById("transcript");
+      const chatResponses = document.getElementById("chatResponses");
+      const thinkingDiv = document.getElementById("thinking");
 
-    // Let’s capture only final results:
-    recognition.interimResults = true; 
-    // We can keep it true for partial preview, 
-    // but we only append to finalTranscript when isFinal is true.
-    recognition.continuous = false; 
-    // If you want continuous listening, you can set this to true,
-    // but handle restarts carefully.
+      // 3) Set up Web Speech API
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
 
-    // Start speech recognition when the button is clicked
-    startBtn.addEventListener("click", () => {
-      recognition.start();
-    });
+      recognition.interimResults = true;
+      recognition.continuous = false;
 
-    // Temporary variable to store the final recognized text
-    let finalTranscript = "";
+      // Start speech recognition when the button is clicked
+      startBtn.addEventListener("click", () => {
+        recognition.start();
+      });
 
-    // 4) On recognition result
-    recognition.addEventListener("result", (event) => {
-      // We'll clear finalTranscript each time 'result' fires
-      // to rebuild the current final text
-      finalTranscript = "";
+      let finalTranscript = "";
+      let speechSynthesisUtterance;
 
-      // Iterate through each segment in the results
-      for (let i = 0; i < event.results.length; i++) {
-        // Only process final results to avoid duplicates
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript + " ";
+      // 4) On recognition result
+      recognition.addEventListener("result", (event) => {
+        finalTranscript = "";
+
+        for (let i = 0; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript + " ";
+          }
         }
+
+        transcriptDiv.textContent = finalTranscript.trim();
+      });
+
+      // 5) On recognition end
+      recognition.addEventListener("end", () => {
+        const userSpeech = finalTranscript.trim();
+        if (userSpeech) {
+          socket.emit("chat message", userSpeech);
+          showThinking();
+        }
+      });
+
+      // Show a "thinking" animation
+      function showThinking() {
+        thinkingDiv.innerHTML = `
+          <img src="images/thinking.gif" alt="Thinking..." height="20" width="120" style="margin-top: 12px;" />
+          <p>Processing...</p>
+        `;
       }
 
-      // Display or replace the transcript text
-      transcriptDiv.textContent = finalTranscript.trim();
-    });
-
-    // 5) On recognition end
-    recognition.addEventListener("end", () => {
-      // If finalTranscript has content, send to server
-      const userSpeech = finalTranscript.trim();
-      if (userSpeech) {
-        // Optional: display the user message
-        //displayUserMessage(userSpeech);
-        // Emit the final user speech to server
-        socket.emit("chat message", userSpeech);      
-          chatResponses.removeChild(document.getElementsByClassName("ai-message")[0]);
-          var elem = document.createElement("img");
-          elem.setAttribute("src", "images/thinking.gif");
-          elem.setAttribute("height", "120");
-          elem.setAttribute("width", "120");
-          elem.setAttribute("alt", "Thinking..");
-          elem.className = "thinking";
-          document.getElementById("thinking").appendChild(elem);
+      // Hide the "thinking" animation
+      function hideThinking() {
+        thinkingDiv.innerHTML = "";
       }
-    });
 
-    // 6) Listen for AI responses (HTML) from server
-    socket.on("chat response", (aiHtml) => {
-      const div = document.createElement("div");
-      div.className = "ai-message";
-      // Insert HTML so markup from GPT is rendered
-      div.innerHTML = aiHtml;
-      chatResponses.appendChild(div);
-      document.getElementById("thinking").removeChild(document.getElementsByClassName("thinking")[0]);
+      // 6) Listen for AI responses (HTML) from server
+      socket.on("chat response", (aiHtml) => {
+        const div = document.createElement("div");
+        div.className = "ai-message";
+        div.innerHTML = aiHtml;
+        chatResponses.appendChild(div);
+        hideThinking();
 
-      // OPTIONAL: Text-to-speech for AI's response
-      const utter = new SpeechSynthesisUtterance(div.textContent);
-      speechSynthesis.speak(utter);
-    });
+        // Text-to-speech for AI's response
+        speechSynthesisUtterance = new SpeechSynthesisUtterance(div.textContent);
+        speechSynthesis.speak(speechSynthesisUtterance);
+      });
 
-    // Optional: display user messages in the conversation area
-    function displayUserMessage(text) {
-      const userDiv = document.createElement("div");
-      userDiv.className = "user-message";
-      userDiv.textContent = text;
-      chatResponses.appendChild(userDiv);
-    }
-  </script>
-</body>
+      // Stop voice output
+      stopBtn.addEventListener("click", () => {
+        if (speechSynthesisUtterance) {
+          window.speechSynthesis.cancel();
+        }
+      });
+
+      // Display user messages
+      function displayUserMessage(text) {
+        const userDiv = document.createElement("div");
+        userDiv.className = "user-message";
+        userDiv.textContent = text;
+        chatResponses.appendChild(userDiv);
+      }
+    </script>
+  </body>
 </html>
-
